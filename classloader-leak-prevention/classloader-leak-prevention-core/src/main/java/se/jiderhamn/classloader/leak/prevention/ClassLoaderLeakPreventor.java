@@ -63,7 +63,7 @@ public class ClassLoaderLeakPreventor {
     this.preClassLoaderInitiators = preClassLoaderInitiators;
     this.cleanUps = cleanUps;
 
-    java_lang_classLoader_isAncestor = findMethod(ClassLoader.class, "isAncestor", ClassLoader.class);
+    java_lang_classLoader_isAncestor = findMethod(ClassLoader.class, "isAncestor",false, ClassLoader.class);
     NestedProtectionDomainCombinerException.class.getName(); // Should be loaded before switching to leak safe classloader
     
     this.domainCombiner = createDomainCombiner();
@@ -442,12 +442,25 @@ public class ClassLoaderLeakPreventor {
   
   public <T> T getFieldValue(Object obj, String fieldName) {
     final Field field = findField(obj.getClass(), fieldName);
-    return (T) getFieldValue(field, obj);
+    return  field == null ? null : (T) getFieldValue(field, obj);
   }
+  
+    public void setFieldValue(Object obj,String fieldName, Object v) {
+    try {
+      final Field field = findField(obj.getClass(), fieldName);
+      if(field != null){
+          field.set(obj,v);
+      }
+    } catch (Exception ex) {
+      warn(ex);
+      // Silently ignore
+    }
+  }
+  
   
   public <T> T getFieldValue(Field field, Object obj) {
     try {
-      return (T) field.get(obj);
+      return field == null ? null : (T) field.get(obj);
     }
     catch (Exception ex) {
       warn(ex);
@@ -491,7 +504,11 @@ public class ClassLoaderLeakPreventor {
       return null;
   }
   
-  public Method findMethod(Class<?> clazz, String methodName, Class... parameterTypes) {
+  
+  public Method findMethod(Class<?> clazz, String methodName, Class... parameterTypes){
+        return findMethod(clazz,methodName,true,parameterTypes);
+  }
+  public Method findMethod(Class<?> clazz, String methodName,final boolean logException,Class... parameterTypes) {
     if(clazz == null)
       return null;
 
@@ -501,7 +518,9 @@ public class ClassLoaderLeakPreventor {
       return method;
     }
     catch (NoSuchMethodException ex) {
-      warn(ex);
+      if( logException ){
+        warn(ex);
+      }
       // Silently ignore
       return null;
     }

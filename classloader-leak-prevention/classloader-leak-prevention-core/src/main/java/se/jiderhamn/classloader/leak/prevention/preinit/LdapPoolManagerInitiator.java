@@ -16,7 +16,9 @@ public class LdapPoolManagerInitiator implements PreClassLoaderInitiator {
   @Override
   public void doOutsideClassLoader(ClassLoaderLeakPreventor preventor) {
     try {
-      Class.forName("com.sun.jndi.ldap.LdapPoolManager");
+       if( System.getProperty("com.sun.jndi.ldap.connect.pool.timeout") != null ){
+            Class cls = Class.forName("com.sun.jndi.ldap.LdapPoolManager");
+        }
     }
     catch(ClassNotFoundException cnfex) {
       if(preventor.isOracleJRE())
