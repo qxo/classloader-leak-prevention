@@ -68,59 +68,59 @@ public class ClassLoaderLeakPreventorFactory {
   public void configureDefaults() {
     // The pre-initiators part is heavily inspired by Tomcats JreMemoryLeakPreventionListener  
     // See http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/catalina/core/JreMemoryLeakPreventionListener.java?view=markup
-    this.addPreInitiator(new AwtToolkitInitiator());
+    this.addPreInitiator(AwtToolkitInitiator.class);
     // initSecurityProviders()
-    this.addPreInitiator(new JdbcDriversInitiator());
-    this.addPreInitiator(new SunAwtAppContextInitiator());
-    this.addPreInitiator(new SecurityPolicyInitiator());
-    this.addPreInitiator(new SecurityProvidersInitiator());
-    this.addPreInitiator(new DocumentBuilderFactoryInitiator());
-    this.addPreInitiator(new ReplaceDOMNormalizerSerializerAbortException());
-    this.addPreInitiator(new DatatypeConverterImplInitiator());
-    this.addPreInitiator(new JavaxSecurityLoginConfigurationInitiator());
-    this.addPreInitiator(new JarUrlConnectionInitiator());
+    this.addPreInitiator(JdbcDriversInitiator.class);
+    this.addPreInitiator(SunAwtAppContextInitiator.class);
+    this.addPreInitiator(SecurityPolicyInitiator.class);
+    this.addPreInitiator(SecurityProvidersInitiator.class);
+    this.addPreInitiator(DocumentBuilderFactoryInitiator.class);
+    this.addPreInitiator(ReplaceDOMNormalizerSerializerAbortException.class);
+    this.addPreInitiator(DatatypeConverterImplInitiator.class);
+    this.addPreInitiator(JavaxSecurityLoginConfigurationInitiator.class);
+    this.addPreInitiator(JarUrlConnectionInitiator.class);
     // Load Sun specific classes that may cause leaks
-    this.addPreInitiator(new LdapPoolManagerInitiator());
-    this.addPreInitiator(new Java2dDisposerInitiator());
-    this.addPreInitiator(new SunGCInitiator());
-    this.addPreInitiator(new OracleJdbcThreadInitiator());
+    this.addPreInitiator(LdapPoolManagerInitiator.class);
+    this.addPreInitiator(Java2dDisposerInitiator.class);
+    this.addPreInitiator(SunGCInitiator.class);
+    this.addPreInitiator(OracleJdbcThreadInitiator.class);
 
-    this.addCleanUp(new BeanIntrospectorCleanUp());
+    this.addCleanUp( BeanIntrospectorCleanUp.class);
     
     // Apache Commons Pool can leave unfinished threads. Anything specific we can do?
-    this.addCleanUp(new BeanELResolverCleanUp());
-    this.addCleanUp(new BeanValidationCleanUp());
-    this.addCleanUp(new JavaServerFaces2746CleanUp());
-    this.addCleanUp(new GeoToolsCleanUp());
+    this.addCleanUp( BeanELResolverCleanUp.class);
+    this.addCleanUp( BeanValidationCleanUp.class);
+    this.addCleanUp( JavaServerFaces2746CleanUp.class);
+    this.addCleanUp( GeoToolsCleanUp.class);
     // Can we do anything about Google Guice ?
     // Can we do anything about Groovy http://jira.codehaus.org/browse/GROOVY-4154 ?
-    this.addCleanUp(new IntrospectionUtilsCleanUp());
+    this.addCleanUp( IntrospectionUtilsCleanUp.class);
     // Can we do anything about Logback http://jira.qos.ch/browse/LBCORE-205 ?
-    this.addCleanUp(new IIOServiceProviderCleanUp()); // clear ImageIO registry
-    this.addCleanUp(new ThreadGroupContextCleanUp());
-    this.addCleanUp(new X509TrustManagerImplUnparseableExtensionCleanUp());
+    this.addCleanUp( IIOServiceProviderCleanUp.class); // clear ImageIO registry
+    this.addCleanUp( ThreadGroupContextCleanUp.class);
+    this.addCleanUp( X509TrustManagerImplUnparseableExtensionCleanUp.class);
     
     ////////////////////
     // Fix generic leaks
-    this.addCleanUp(new DriverManagerCleanUp());
+    this.addCleanUp( DriverManagerCleanUp.class);
     
-    this.addCleanUp(new DefaultAuthenticatorCleanUp());
+    this.addCleanUp( DefaultAuthenticatorCleanUp.class);
 
-    this.addCleanUp(new MBeanCleanUp());
-    this.addCleanUp(new MXBeanNotificationListenersCleanUp());
+    this.addCleanUp( MBeanCleanUp.class);
+    this.addCleanUp( MXBeanNotificationListenersCleanUp.class);
     
-    this.addCleanUp(new ShutdownHookCleanUp());
-    this.addCleanUp(new PropertyEditorCleanUp());
-    this.addCleanUp(new SecurityProviderCleanUp());
-    this.addCleanUp(new JceSecurityCleanUp()); // (Probably best to do after deregistering the providers)
-    this.addCleanUp(new ProxySelectorCleanUp());
-    this.addCleanUp(new RmiTargetsCleanUp());
-    this.addCleanUp(new StopThreadsCleanUp());
-    this.addCleanUp(new ThreadGroupCleanUp());
-    this.addCleanUp(new ThreadLocalCleanUp()); // This must be done after threads have been stopped, or new ThreadLocals may be added by those threads
-    this.addCleanUp(new KeepAliveTimerCacheCleanUp());
-    this.addCleanUp(new ResourceBundleCleanUp());
-    this.addCleanUp(new ApacheCommonsLoggingCleanUp()); // Do this last, in case other shutdown procedures want to log something.
+    this.addCleanUp( ShutdownHookCleanUp.class);
+    this.addCleanUp( PropertyEditorCleanUp.class);
+    this.addCleanUp( SecurityProviderCleanUp.class);
+    this.addCleanUp( JceSecurityCleanUp.class); // (Probably best to do after deregistering the providers)
+    this.addCleanUp( ProxySelectorCleanUp.class);
+    this.addCleanUp( RmiTargetsCleanUp.class);
+    this.addCleanUp( StopThreadsCleanUp.class);
+    this.addCleanUp( ThreadGroupCleanUp.class);
+    this.addCleanUp( ThreadLocalCleanUp.class); // This must be done after threads have been stopped, or new ThreadLocals may be added by those threads
+    this.addCleanUp( KeepAliveTimerCacheCleanUp.class);
+    this.addCleanUp( ResourceBundleCleanUp.class);
+    this.addCleanUp( ApacheCommonsLoggingCleanUp.class); // Do this last, in case other shutdown procedures want to log something.
     
   }
 
@@ -157,10 +157,33 @@ public class ClassLoaderLeakPreventorFactory {
   public void addPreInitiator(PreClassLoaderInitiator preClassLoaderInitiator) {
     addConsideringOrder(this.preInitiators, preClassLoaderInitiator);
   }
+  
+  public void addPreInitiator(Class<?> cls) {
+     PreClassLoaderInitiator preClassLoaderInitiator   = newInstance(cls);
+     if( preClassLoaderInitiator != null){
+        addConsideringOrder(this.preInitiators, preClassLoaderInitiator);
+     }
+  }
 
   /** Add a new {@link ClassLoaderPreMortemCleanUp}, using the class name as name */
   public void addCleanUp(ClassLoaderPreMortemCleanUp classLoaderPreMortemCleanUp) {
     addConsideringOrder(this.cleanUps, classLoaderPreMortemCleanUp);
+  }
+  
+  private <T> T newInstance(Class cls){
+        try{
+            return  cls == null ? null : (T) cls.newInstance();
+         }catch(Throwable ex){
+           //ignore
+       }
+       return null;
+  }
+  
+   public void addCleanUp(Class<?> cls) {
+        ClassLoaderPreMortemCleanUp classLoaderPreMortemCleanUp = newInstance(cls);
+        if( classLoaderPreMortemCleanUp != null){
+            addConsideringOrder(this.cleanUps, classLoaderPreMortemCleanUp);
+        }
   }
   
   /** Add new {@link I} entry to {@code map}, taking {@link MustBeAfter} into account */
