@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.JavaVersion;
 import se.jiderhamn.classloader.leak.prevention.cleanup.*;
 import se.jiderhamn.classloader.leak.prevention.preinit.*;
 
@@ -82,7 +83,9 @@ public class ClassLoaderLeakPreventorFactory {
     // Load Sun specific classes that may cause leaks
     this.addPreInitiator(LdapPoolManagerInitiator.class);
     this.addPreInitiator(Java2dDisposerInitiator.class);
-    this.addPreInitiator(SunGCInitiator.class);
+	if ( ! JavaVersion.JAVA_RECENT.atLeast(JavaVersion.JAVA_9) ) {
+		this.addPreInitiator(SunGCInitiator.class);
+	}
     this.addPreInitiator(OracleJdbcThreadInitiator.class);
 
     this.addCleanUp( BeanIntrospectorCleanUp.class);
